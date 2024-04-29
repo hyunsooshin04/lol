@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Member List</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    </style>
+<body class="bg-white text-gray-900">
+    <div class="container mx-auto px-4">
+        <nav class="flex justify-between items-center py-6">
+            <div class="text-lg font-bold">
+                요마왕
+            </div>
+            <div class="space-x-4">
+                <a href="#" class="text-gray-600 hover:text-gray-900">대진표</a>
+                <a href="#" class="text-gray-600 hover:text-gray-900">멤버 관리</a>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>
+    <style>
+      body {
+        background-color: #f9fafb;
+      }
+      .container {
+        max-width: 70%;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+      }
+      th {
+        background-color: #f3f4f6;
+      }
+    </style>
+    <style>
+      .form-container {
+        margin-bottom: 50px;
+        display: none;
+      }
+      .form-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .form-label {
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      .form-input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 20px;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+      }
+      .form-select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 20px;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        background-color: #ffffff;
+      }
+      .submit-btn {
+        width: 100%;
+        padding: 10px;
+        background-color: #4f46e5;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .submit-btn:hover {
+        background-color: #4338ca;
+      }
+      .line-btn {
+        margin-right: 5px;
+        padding: 8px 16px;
+        background-color: #e5e7eb;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .line-btn.active {
+        background-color: #4f46e5;
+        color: white;
+      }
+      #lineButtons {
+        margin-bottom: 20px;
+      }
+
+      #delete {
+        width: 100%;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="text-xl font-bold mb-4">멤버 관리</h1>
+
+      <button
+        id="add-member"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+        onclick="click_button('add')"
+      >
+        추가(수정)
+      </button>
+      <button
+        id="search-member"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+        onclick="click_button('list')"
+      >
+        리스트
+      </button>
+      <div class="form-container">
+        <form id="addMemberForm">
+          <label for="name" class="form-label">이름 입력</label>
+          <input
+            type="text"
+            id="name"
+            class="form-input"
+            placeholder="Ex) 이설진"
+          />
+
+          <label for="tier" class="form-label">티어 입력</label>
+          <input
+            type="text"
+            id="tier"
+            class="form-input"
+            placeholder="Ex) B3, S2, G1, P4, D2, M1, GM1, C1"
+          />
+
+          <input type="checkbox" id="test" /> 0.5층<br />
+
+          <label class="form-label"
+            >라인 선택
+            <span style="font-size: 12px; color: #666"
+              >(선택한 순서로 선호 라인의 순서가 정해집니다.)</span
+            ></label
+          >
+          <div id="lineButtons">
+            <button type="button" class="line-btn">Top</button>
+            <button type="button" class="line-btn">Jungle</button>
+            <button type="button" class="line-btn">Mid</button>
+            <button type="button" class="line-btn">ADC</button>
+            <button type="button" class="line-btn">Support</button>
+          </div>
+          <input type="hidden" id="line" name="line" />
+
+          <button type="submit" class="submit-btn">멤버 추가(수정)</button>
+        </form>
+      </div>
+      <div id="list-container">
+        <div class="mb-4">
+          <label for="name" class="block mb-2">이름</label>
+          <input
+            type="text"
+            id="name"
+            placeholder="이름 입력"
+            class="p-2 border rounded w-full"
+          />
+          <button
+            id="search"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+            style="margin-top: 15px"
+            onclick="getData()"
+          >
+            검색
+          </button>
+        </div>
+        <table id="members">
+          <colgroup>
+            <col style="width: 5%" />
+            <col style="width: 25%" />
+            <col style="width: 25%" />
+            <col style="width: 35%" />
+            <col style="width: 10%" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>순서</th>
+              <th>이름</th>
+              <th>티어</th>
+              <th>라인</th>
+              <th>삭제</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 데이터 로드 자리 -->
+          </tbody>
+        </table>
+      </div>
+      <script>
+        const tierRanks = {
+          Challenger: 1,
+          Grandmaster: 2,
+          Master: 3,
+          Diamond: 4,
+          Emerald: 5,
+          Platinum: 6,
+          Gold: 7,
+          Silver: 8,
+          Bronze: 9,
+          Iron: 10,
+        };
+
+        function getData() {
+          clearTbody();
+          fetch("http://localhost:3000/member/")
+            .then((response) => {
+              console.log(response);
+              if (!response.ok) {
+                throw new Error(
+                  "Network response was not ok " + response.statusText
+                );
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log(data);
+              let membersData = data;
+
+              membersData.forEach((member) => {
+                member.fullTier = member.rank
+                  ? `${member.tier} ${member.rank}`
+                  : member.tier;
+              });
+
+              membersData.sort((a, b) => {
+                const tierComparison = tierRanks[a.tier] - tierRanks[b.tier];
+                if (tierComparison !== 0) return tierComparison;
+
+                const highTier = ["Challenger", "Grandmaster", "Master"]; // 랭크가 높을수록 우선 순위가 높은 티어
+
+                // 'rank'가 없는 경우, 기본값 설정. '0'은 가장 높은 랭크로 간주
+                const rankA = a.rank || "0";
+                const rankB = b.rank || "0";
+
+                if (highTier.includes(a.tier) && highTier.includes(b.tier)) {
+                  // 두 멤버 모두 높은 티어에 속하는 경우 랭크가 높을수록 우선
+                  return parseInt(rankB) - parseInt(rankA);
+                } else if (highTier.includes(a.tier)) {
+                  // A만 높은 티어에 속하는 경우
+                  return -1;
+                } else if (highTier.includes(b.tier)) {
+                  // B만 높은 티어에 속하는 경우
+                  return 1;
+                } else {
+                  // 나머지 티어에서는 랭크가 낮을수록 우선
+                  return parseInt(rankA) - parseInt(rankB);
+                }
+              });
+
+              // 정렬된 데이터를 HTML 테이블에 표시
+              const tableBody = document
+                .getElementById("members")
+                .getElementsByTagName("tbody")[0];
+
+              membersData.forEach((member) => {
+                const row = tableBody.insertRow();
+                const indexCell = row.insertCell(0);
+                const nameCell = row.insertCell(1);
+                const tierCell = row.insertCell(2);
+                const lineCell = row.insertCell(3);
+                const buttonCell = row.insertCell(4);
+                indexCell.textContent = membersData.indexOf(member) + 1;
+                nameCell.textContent = member.name;
+                tierCell.textContent = member.fullTier;
+                buttonCell.innerHTML = `<button id="delete" onclick="deleteMember('${member.name}') ">삭제</button>`;
+
+                // 'line' 배열의 각 요소를 한글로 변환
+                const lineKorean = member.line.map((position) => {
+                  switch (position.toLowerCase()) {
+                    case "top":
+                      return "탑";
+                    case "jungle":
+                      return "정글";
+                    case "mid":
+                      return "미드";
+                    case "adc":
+                      return "원딜";
+                    case "support":
+                      return "서폿";
+                    default:
+                      return position;
+                  }
+                });
+
+                lineCell.textContent = lineKorean.join(" "); // 변환된 배열을 공백으로 연결하여 표시
+                tierCell.classList.add(member.tier.toLowerCase()); // CSS 클래스 추가
+              });
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error);
+            });
+        }
+
+        function clearTbody() {
+          // 'tbody' 요소를 선택
+          const tbody = document.querySelector("tbody");
+          // 'tbody'의 모든 자식 노드를 삭제
+          while (tbody.firstChild) {
+            tbody.removeChild(tbody.firstChild);
+          }
+        }
+
+        function deleteMember(name) {
+          if (!confirm(`정말로 삭제하시겠습니까? (${name})`)) return; // 사용자 확인(취소 시 함수 종료
+          // URL에 회원 이름을 동적으로 포함
+          fetch(`http://localhost:3000/member/${name}`, {
+            method: "DELETE",
+          })
+            .then((response) => response.json()) // 응답을 JSON으로 파싱
+            .then((data) => {
+              // 결과 메시지를 콘솔과 알림으로 출력
+              console.log(data);
+              alert(data.message);
+            })
+            .catch((error) => {
+              // 오류 발생 시 콘솔과 알림으로 오류 메시지 출력
+              console.error("Error:", error);
+              alert("오류가 발생했습니다: " + error.message);
+            });
+        }
+
+        getData();
+      </script>
+      <script>
+        // 버튼 클릭 시
+        let mode = "list";
+        addEventListener("DOMContentLoaded", function () {
+          document.querySelector("#search-member").style.backgroundColor =
+            "grey";
+        });
+        function click_button(option) {
+          if (option == "add") {
+            document.querySelector(".form-container").style.display = "block";
+            document.querySelector("#list-container").style.display = "none";
+            document.querySelector("#add-member").style.backgroundColor =
+              "grey";
+            document.querySelector("#search-member").style.backgroundColor =
+              "#4f46e5";
+          } else if (option == "list") {
+            document.querySelector(".form-container").style.display = "none";
+            document.querySelector("#list-container").style.display = "block";
+            document.querySelector("#search-member").style.backgroundColor =
+              "grey";
+            document.querySelector("#add-member").style.backgroundColor =
+              "#4f46e5";
+          }
+        }
+      </script>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const lineButtons = document.querySelectorAll(".line-btn");
+          const lineInput = document.getElementById("line");
+          let selectedLines = [];
+
+          lineButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+              const lineValue = button.textContent;
+              if (selectedLines.includes(lineValue)) {
+                // If already selected, remove it
+                selectedLines = selectedLines.filter(
+                  (line) => line !== lineValue
+                );
+              } else {
+                // Add to selections
+                selectedLines.push(lineValue);
+              }
+              updateLineInput();
+              updateButtonStyles();
+            });
+          });
+
+          function updateLineInput() {
+            lineInput.value = selectedLines.join(" ");
+          }
+
+          function updateButtonStyles() {
+            lineButtons.forEach((button) => {
+              const lineValue = button.textContent;
+              if (selectedLines.includes(lineValue)) {
+                button.classList.add("active");
+              } else {
+                button.classList.remove("active");
+              }
+            });
+          }
+
+          document
+            .getElementById("addMemberForm")
+            .addEventListener("submit", function (event) {
+              event.preventDefault();
+              // Here you would normally handle the form submission to the server
+              console.log("Submitted with lines:", lineInput.value);
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+          const lineButtons = document.querySelectorAll(".line-btn");
+          const lineInput = document.getElementById("line");
+          let selectedLines = [];
+
+          lineButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+              const lineValue = button.textContent;
+              if (selectedLines.includes(lineValue)) {
+                // 이미 선택된 항목을 선택 취소
+                selectedLines = selectedLines.filter(
+                  (line) => line !== lineValue
+                );
+              } else {
+                // 선택되지 않은 항목을 추가
+                selectedLines.push(lineValue);
+              }
+              updateLineInput();
+              updateButtonStyles();
+            });
+          });
+
+          function updateLineInput() {
+            lineInput.value = selectedLines.join(" ");
+          }
+
+          function updateButtonStyles() {
+            lineButtons.forEach((button) => {
+              const lineValue = button.textContent;
+              if (selectedLines.includes(lineValue)) {
+                button.classList.add("active");
+              } else {
+                button.classList.remove("active");
+              }
+            });
+          }
+
+          const form = document.getElementById("addMemberForm");
+          const tierMapping = {
+            I: "Iron",
+            B: "Bronze",
+            S: "Silver",
+            G: "Gold",
+            P: "Platinum",
+            E: "Emerald",
+            D: "Diamond",
+            M: "Master",
+            GM: "Grandmaster",
+            C: "Challenger",
+          };
+
+          form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const name = document.getElementById("name").value;
+            const tier = document.getElementById("tier").value;
+            const lines = lineInput.value;
+
+            const tierMatch = tier.match(/^([A-Z]+)(\d+)$/);
+            if (!tierMatch || !tierMapping[tierMatch[1]]) {
+              alert("티어 형식이 올바르지 않습니다. 예: B3");
+              return;
+            }
+            checkbox = document.getElementById("test");
+            const tierRank = tierMapping[tierMatch[1]];
+            let rank = tierMatch[2];
+
+            if (checkbox.checked) {
+              rank = parseFloat(rank) + 0.5;
+            }
+   
+            console.log(
+              JSON.stringify({
+                name: name,
+                tier: tierRank,
+                rank: rank,
+                line: lines.split(" "), // 문자열을 배열로 변환
+              })
+            );
+
+            fetch("http://localhost:3000/member/add", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                name: name,
+                tier: tierRank,
+                rank: rank,
+                line: lines.split(" "), // 문자열을 배열로 변환
+              }),
+            })
+              .then((response) => response.json()) // 응답을 JSON 형태로 변환
+              .then((data) => {
+                alert(data.message); // 서버로부터 받은 메시지를 alert로 표시
+                click_button("list");
+                getData();
+              })
+              .catch((error) => {
+                alert("오류 발생: " + error.message); // 네트워크 오류 또는 기타 예외 처리
+              });
+          });
+        });
+      </script>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>롤 티어 목록</title>
+    <style>
+      /* 티어별 색상 스타일 */
+      .Challenger {
+        background-color: #ffd700;
+      }
+      .Grandmaster {
+        background-color: #daa520;
+      }
+      .Master {
+        background-color: #c0c0c0;
+      }
+      .Diamond {
+        background-color: #add8e6;
+      }
+      .Platinum {
+        background-color: #000080;
+      }
+      .Gold {
+        background-color: #ffd700;
+      }
+      .Silver {
+        background-color: #c0c0c0;
+      }
+      .Bronze {
+        background-color: #cd853f;
+      }
+      .Iron {
+        background-color: #808080;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #4caf50;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>롤 티어 목록</h1>
+    <table id="members">
+      <thead>
+        <tr>
+          <th>이름</th>
+          <th>티어</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 데이터 로드 자리 -->
+      </tbody>
+    </table>
+
+    <script>
+      const tierRanks = {
+        Challenger: 1,
+        Grandmaster: 2,
+        Master: 3,
+        Diamond: 4,
+        Platinum: 5,
+        Gold: 6,
+        Silver: 7,
+        Bronze: 8,
+        Iron: 9,
+      };
+
+      fetch("http://localhost:3000/member")
+        .then((response) => {
+          console.log(response);
+          if (!response.ok) {
+            throw new Error(
+              "Network response was not ok " + response.statusText
+            );
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+          let membersData = data;
+          // 티어와 랭크를 결합하고, 티어와 랭크에 따라 정렬
+          membersData.forEach((member) => {
+            member.fullTier = member.rank
+              ? `${member.tier}${member.rank}`
+              : member.tier;
+          });
+
+          membersData.sort((a, b) => {
+            const tierComparison = tierRanks[a.tier] - tierRanks[b.tier];
+            if (tierComparison !== 0) return tierComparison;
+            // 'rank'가 없는 경우, 0으로 취급하여 최상위 랭크로 간주
+            const rankA = a.rank || "0";
+            const rankB = b.rank || "0";
+            return parseInt(rankA) - parseInt(rankB);
+          });
+
+          // 정렬된 데이터를 HTML 테이블에 표시
+          const tableBody = document
+            .getElementById("members")
+            .getElementsByTagName("tbody")[0];
+          membersData.forEach((member) => {
+            const row = tableBody.insertRow();
+            const nameCell = row.insertCell(0);
+            const tierCell = row.insertCell(1);
+            nameCell.textContent = member.name;
+            tierCell.textContent = member.fullTier;
+            tierCell.classList.add(member.tier); // 색상 클래스 추가
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    </script>
+  </body>
+</html>

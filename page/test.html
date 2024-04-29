@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form and Table Display</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f9fafb;
+      }
+      .container {
+        max-width: 50%;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+      }
+      #nameForm {
+        max-width: 70%;
+        margin: auto;
+      }
+      table {
+        width: 70%;
+        border-collapse: collapse;
+        margin: auto;
+      }
+      th,
+      td {
+        border: 1px solid #e5e7eb;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f3f4f6;
+      }
+      .dragging {
+        opacity: 0.5;
+      }
+
+      .mt-8 table {
+        width: 45%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <form id="nameForm">
+        <label
+          for="nameInput"
+          class="block text-lg font-medium text-gray-700"
+          style="font-size: 31px; margin-bottom: 15px"
+          >이름</label
+        >
+        <input
+          type="text"
+          id="nameInput"
+          name="name"
+          placeholder="이름 입력"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+        <button
+          type="submit"
+          class="mt-4 px-4 py-2 bg-blue-500 text-white font-bold rounded hover:bg-blue-700"
+        >
+          추가
+        </button>
+      </form>
+      <label
+        for="nameInput"
+        class="block text-lg font-medium text-gray-700"
+        style="max-width: 70%; margin: 30px auto auto auto; font-size: 31px"
+        >참가자</label
+      >
+      <button
+        type="submit"
+        class="mt-4 px-4 py-2 bg-blue-500 text-white font-bold rounded hover:bg-blue-700"
+        style="max-width: 70; margin-left: 14.8%"
+        onclick="generateTeams()"
+      >
+        팀 배정
+      </button>
+      <div class="mt-6">
+        <table id="namesTable">
+          <colgroup>
+            <col style="width: 20%" />
+            <col style="width: 20%" />
+            <col style="width: 30%" />
+            <col style="width: 10%" />
+            <col style="width: 15%" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>이름</th>
+              <th>티어</th>
+              <th>라인</th>
+              <th>점수</th>
+              <th>삭제</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 데이터 로드 자리 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mt-8">
+      <h3
+        class="text-lg font-medium text-gray-700"
+        style="max-width: 70%; margin: 20px auto auto auto; font-size: 24px"
+      >
+        대진표
+      </h3>
+      <div
+        id="teamsContainer"
+        style="display: flex; justify-content: space-around; width: 100%"
+      >
+        <div class="teamTableContainer" style="width: 45%; margin: auto">
+          <table
+            id="teamATable"
+            class="teamTable"
+            style="width: 100%; border-collapse: collapse"
+          >
+            <thead>
+              <tr>
+                <th>이름</th>
+                <th>티어</th>
+                <th>라인</th>
+                <th>점수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 팀 A 데이터 로드 자리 -->
+            </tbody>
+          </table>
+        </div>
+        <div class="teamTableContainer" style="width: 45%; margin: auto">
+          <table
+            id="teamBTable"
+            class="teamTable"
+            style="width: 100%; border-collapse: collapse"
+          >
+            <thead>
+              <tr>
+                <th>이름</th>
+                <th>티어</th>
+                <th>라인</th>
+                <th>점수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 팀 B 데이터 로드 자리 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div
+        id="scoreSummary"
+        style="max-width: 70%; margin: auto; text-align: center"
+      >
+        <p id="teamAScore" class="text-lg font-medium text-gray-700">
+          팀 A 점수: 0
+        </p>
+        <p id="teamBScore" class="text-lg font-medium text-gray-700">
+          팀 B 점수: 0
+        </p>
+        <p id="scoreDifference" class="text-lg font-medium text-gray-700">
+          점수 차이: 0
+        </p>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("nameForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const nameInput = document.getElementById("nameInput");
+          if (nameInput.value.trim() === "") {
+            alert("이름을 입력해주세요.");
+            return;
+          }
+          fetch(`http://localhost:3000/member/${nameInput.value}`)
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              const tableBody = document
+                .getElementById("namesTable")
+                .getElementsByTagName("tbody")[0];
+              const newRow = tableBody.insertRow(tableBody.rows.length);
+
+              // 이름 셀 추가
+              const nameCell = newRow.insertCell(0);
+              nameCell.textContent = data.name;
+
+              // 티어 셀 추가
+              const tierCell = newRow.insertCell(1);
+              tierCell.textContent = data.tier + " " + data.rank;
+
+              // 라인 셀 추가
+              const lineCell = newRow.insertCell(2);
+              lineCell.textContent = data.line.join(", "); // 가정: line 데이터가 배열 형태로 전달된다면
+
+              // 점수 셀 추가 (여기서는 임시로 고정된 값을 사용)
+              const scoreCell = newRow.insertCell(3);
+              scoreCell.textContent = calculateScore(data);
+
+              // 삭제 버튼 셀 추가
+              const deleteCell = newRow.insertCell(4);
+              const deleteButton = document.createElement("button");
+              deleteButton.textContent = "삭제";
+              deleteButton.classList.add(
+                "px-4",
+                "py-2",
+                "bg-red-500",
+                "text-white",
+                "font-bold",
+                "rounded",
+                "hover:bg-red-700"
+              );
+              deleteButton.id = data.name;
+              deleteButton.onclick = function () {
+                deleteRow(this);
+              };
+
+              deleteCell.appendChild(deleteButton);
+
+              // 입력 필드 초기화
+              nameInput.value = "";
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error);
+              alert("데이터를 가져오는 데 실패했습니다: " + error.message);
+            });
+        });
+
+      testData = [
+        "이설진",
+        "유미",
+        "요마왕",
+        "교두리",
+        "김철수",
+        "박영희",
+        "정민아",
+        "한동근",
+        "서은미",
+        "류태준",
+      ];
+
+      testData.forEach((name) => {
+        test(name);
+      });
+
+      function test(name) {
+        fetch(`http://localhost:3000/member/${name}`)
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            const tableBody = document
+              .getElementById("namesTable")
+              .getElementsByTagName("tbody")[0];
+            const newRow = tableBody.insertRow(tableBody.rows.length);
+
+            // 이름 셀 추가
+            const nameCell = newRow.insertCell(0);
+            nameCell.textContent = data.name;
+
+            // 티어 셀 추가
+            const tierCell = newRow.insertCell(1);
+            tierCell.textContent = data.tier + " " + data.rank;
+
+            // 라인 셀 추가
+            const lineCell = newRow.insertCell(2);
+            lineCell.textContent = data.line.join(", "); // 가정: line 데이터가 배열 형태로 전달된다면
+
+            // 점수 셀 추가 (여기서는 임시로 고정된 값을 사용)
+            const scoreCell = newRow.insertCell(3);
+            scoreCell.textContent = calculateScore(data);
+
+            // 삭제 버튼 셀 추가
+            const deleteCell = newRow.insertCell(4);
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "삭제";
+            deleteButton.classList.add(
+              "px-4",
+              "py-2",
+              "bg-red-500",
+              "text-white",
+              "font-bold",
+              "rounded",
+              "hover:bg-red-700"
+            );
+            deleteButton.id = data.name;
+            deleteButton.onclick = function () {
+              deleteRow(this);
+            };
+
+            deleteCell.appendChild(deleteButton);
+
+            // 입력 필드 초기화
+            nameInput.value = "";
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+            alert("데이터를 가져오는 데 실패했습니다: " + error.message);
+          });
+      }
+
+      function deleteRow(button) {
+        const row = button.parentElement.parentElement;
+        row.remove();
+      }
+
+      function calculateScore(data) {
+        const baseScores = {
+          Iron: 100,
+          Bronze: 500,
+          Silver: 900,
+          Gold: 1300,
+          Platinum: 1700,
+          Emerald: 2100,
+          Diamond: 2500,
+          Master: 2900,
+          Grandmaster: 2900,
+          Challenger: 2900,
+        };
+        if (
+          data.tier == "Master" ||
+          data.tier == "Grandmaster" ||
+          data.tier == "Challenger"
+        )
+          return baseScores[data.tier] + data.rank * 100; // Master 이상은 기본값
+        const rankScore = (4 - (data.rank || 4)) * 100; // rank 4가 기본값, rank 1이면 (4-1)*100 = 300 추가 점수
+        return baseScores[data.tier] + rankScore;
+      }
+
+      function generateTeams(aTeamUser, bTeamUser) {
+        const participants = Array.from(
+          document.querySelectorAll("#namesTable tbody tr")
+        );
+        if (participants.length < 2) {
+          alert("최소 2명 이상의 참가자가 필요합니다.");
+          return;
+        }
+
+        // 점수에 따라 참가자 정렬
+        const sortedParticipants = participants.sort((a, b) => {
+          const scoreA = parseInt(a.cells[3].textContent);
+          const scoreB = parseInt(b.cells[3].textContent);
+          return scoreB - scoreA; // 내림차순 정렬
+        });
+
+        const teamA = [];
+        const teamB = [];
+        let teamAScore = 0;
+        let teamBScore = 0;
+
+        // 특정 유저를 각 팀에 우선 할당
+        sortedParticipants.forEach((participant) => {
+          const name = participant.cells[0].textContent.trim();
+          const participantScore = parseInt(participant.cells[3].textContent);
+
+          if (name === aTeamUser && aTeamUser != null) {
+            teamA.push(participant);
+            teamAScore += participantScore;
+            aTeamUser = null; // 이미 할당했으므로 null로 설정
+          } else if (name === bTeamUser && bTeamUser != null) {
+            teamB.push(participant);
+            teamBScore += participantScore;
+            bTeamUser = null; // 이미 할당했으므로 null로 설정
+          }
+        });
+
+        // 나머지 참가자를 점수 차이를 최소화하면서 팀에 할당
+        sortedParticipants.forEach((participant) => {
+          const name = participant.cells[0].textContent.trim();
+          const participantScore = parseInt(participant.cells[3].textContent);
+
+          // 이미 할당된 유저는 제외하고 나머지 참가자를 할당
+          if (!(name === aTeamUser && name === bTeamUser)) {
+            if (teamAScore <= teamBScore) {
+              teamA.push(participant);
+              teamAScore += participantScore;
+            } else {
+              teamB.push(participant);
+              teamBScore += participantScore;
+            }
+          }
+        });
+
+        // 기존 테이블 데이터 지우기
+        document.querySelector("#teamATable tbody").innerHTML = "";
+        document.querySelector("#teamBTable tbody").innerHTML = "";
+
+        // 팀 A와 팀 B에 데이터 추가
+        teamA.forEach((participant) => {
+          if (!participant.classList.contains("fixed")) {
+            // 이미 고정된 유저 제외하고 추가
+            addParticipantToTable(participant, "teamATable");
+          }
+        });
+        teamB.forEach((participant) => {
+          if (!participant.classList.contains("fixed")) {
+            // 이미 고정된 유저 제외하고 추가
+            addParticipantToTable(participant, "teamBTable");
+          }
+        });
+
+        // 점수 차이 계산 및 표시
+        calculateScoreDifference();
+        test1();
+      }
+
+      function addParticipantToTable(participant, tableId) {
+        const table = document
+          .getElementById(tableId)
+          .getElementsByTagName("tbody")[0];
+        const newRow = table.insertRow();
+        Array.from(participant.cells).forEach((cell) => {
+          if (cell.cellIndex === 4) return; // 삭제 버튼은 제외 (4번째 열)
+          const newCell = newRow.insertCell();
+          newCell.textContent = cell.textContent;
+        });
+      }
+
+      //
+
+      function test1() {
+        $(document).ready(function () {
+          function swapRows(srcRow, destRow) {
+            var temp = srcRow.html();
+            srcRow.html(destRow.html());
+            destRow.html(temp);
+          }
+
+          $(".teamTable tbody tr").draggable({
+            helper: "clone",
+            revert: "invalid",
+            opacity: 0.7,
+            start: function (event, ui) {
+              ui.helper.addClass("dragging");
+            },
+          });
+
+          $(".teamTable tbody tr").droppable({
+            hoverClass: "droppable-hover",
+            drop: function (event, ui) {
+              var srcRow = ui.draggable;
+              var destRow = $(this);
+              swapRows(srcRow, destRow);
+              calculateScoreDifference();
+            },
+          });
+        });
+      }
+
+      //
+
+      function calculateScoreDifference() {
+        let teamAScore = 0;
+        let teamBScore = 0;
+
+        // 팀 A 점수 계산
+        const teamARows = document.querySelectorAll("#teamATable tbody tr");
+        teamARows.forEach((row) => {
+          const score = parseInt(row.cells[3].textContent) || 0; // 4번째 열이 점수라고 가정
+          teamAScore += score;
+        });
+
+        // 팀 B 점수 계산
+        const teamBRows = document.querySelectorAll("#teamBTable tbody tr");
+        teamBRows.forEach((row) => {
+          const score = parseInt(row.cells[3].textContent) || 0; // 4번째 열이 점수라고 가정
+          teamBScore += score;
+        });
+
+        // 점수 차이 업데이트
+        document.getElementById(
+          "teamAScore"
+        ).textContent = `팀 A 점수: ${teamAScore}`;
+        document.getElementById(
+          "teamBScore"
+        ).textContent = `팀 B 점수: ${teamBScore}`;
+        const scoreDifference = Math.abs(teamAScore - teamBScore);
+        document.getElementById(
+          "scoreDifference"
+        ).textContent = `점수 차이: ${scoreDifference}`;
+
+        return scoreDifference; // 함수에서 점수 차이를 반환
+      }
+    </script>
+  </body>
+</html>

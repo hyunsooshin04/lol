@@ -1,0 +1,148 @@
+[
+  {
+    "name": "유미",
+    "tier": "Challenger",
+    "rank": "13",
+    "line": [
+      "support"
+    ]
+  },
+  {
+    "name": "이설진",
+    "tier": "Bronze",
+    "rank": 1.5,
+    "line": [
+      "ADC"
+    ]
+  },
+  {
+    "name": "요마왕",
+    "tier": "Challenger",
+    "rank": "6",
+    "line": [
+      "top",
+      "mid"
+    ]
+  },
+  {
+    "name": "교두리",
+    "tier": "Grandmaster",
+    "rank": "5",
+    "line": [
+      "mid",
+      "top"
+    ]
+  },
+  {
+    "name": "김철수",
+    "tier": "Diamond",
+    "rank": "3",
+    "line": [
+      "support",
+      "jungle"
+    ]
+  },
+  {
+    "name": "박영희",
+    "tier": "Platinum",
+    "rank": "1",
+    "line": [
+      "adc"
+    ]
+  },
+  {
+    "name": "정민아",
+    "tier": "Gold",
+    "rank": "4",
+    "line": [
+      "mid",
+      "top"
+    ]
+  },
+  {
+    "name": "한동근",
+    "tier": "Silver",
+    "rank": "2",
+    "line": [
+      "top"
+    ]
+  },
+  {
+    "name": "서은미",
+    "tier": "Bronze",
+    "rank": "1",
+    "line": [
+      "support"
+    ]
+  },
+  {
+    "name": "최우진",
+    "tier": "Iron",
+    "rank": "3",
+    "line": [
+      "jungle"
+    ]
+  },
+  {
+    "name": "유지민",
+    "tier": "Emerald",
+    "rank": "2",
+    "line": [
+      "mid",
+      "adc"
+    ]
+  },
+  {
+    "name": "류태준",
+    "tier": "Master",
+    "rank": "1",
+    "line": [
+      "top",
+      "jungle"
+    ]
+  },
+  {
+    "name": "쵸케",
+    "tier": "Challenger",
+    "rank": "10",
+    "line": [
+      "support"
+    ]
+  },
+  {
+    "name": "ㅁㅇㄹㄴㅁㄴㅇㄹ",
+    "tier": "Challenger",
+    "rank": "1000",
+    "line": [
+      "Top",
+      "Jungle",
+      "Mid",
+      "ADC",
+      "Support"
+    ]
+  },
+  {
+    "name": "니는",
+    "tier": "Challenger",
+    "rank": "19",
+    "line": [
+      "Top"
+    ]
+  },
+  {
+    "name": "tesafasd",
+    "tier": "Bronze",
+    "rank": "1",
+    "line": [
+      ""
+    ]
+  },
+  {
+    "name": "asdfafds",
+    "tier": "Bronze",
+    "rank": "10.5",
+    "line": [
+      "Top"
+    ]
+  }
+]
