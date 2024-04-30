@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm i;node index.js"
+    "start": "npm install && node index.js",
+    "dev": "npm run server\" \"npm run client\"",
+    "server": "nodemon index.js",
+    "client": "cd client && npm start"
   },
   "author": "",
   "license": "ISC",
