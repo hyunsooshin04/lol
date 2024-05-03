@@ -189,12 +189,12 @@
       <div class="mb-4">
         <label for="name" class="block mb-2">이름</label>
         <input type="text" id="search-name" placeholder="이름 입력" class="p-2 border rounded w-full" />
-        <button id="search" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
-          style="margin-top: 15px" onclick="getData()">
+        <button id="search" style="background-color: #f7786e !important; margin-top: 15px"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4" onclick="getData()">
           검색
         </button>
         <button id="search" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
-          style="margin-top: 15px" onclick="go_index()">
+          onclick="go_index()" style="background-color: #f7786e !important; margin-top: 15px">
           대진표로 이동
         </button>
       </div>
@@ -228,11 +228,11 @@
         <label for="name" class="block mb-2">이름</label>
         <input type="text" id="search-name" placeholder="이름 입력" class="p-2 border rounded w-full" />
         <button id="search" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
-          style="margin-top: 15px" onclick="getData()">
+          style="margin-top: 15px; background-color: #f7786e !important;" onclick="getData()">
           검색
         </button>
         <button id="search" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
-          style="margin-top: 15px" onclick="go_index()">
+          style="margin-top: 15px; background-color: #f7786e !important;" onclick="go_index()">
           대진표로 이동
         </button>
       </div>
@@ -465,7 +465,6 @@
           return;
         }
 
-        alert(name, score);
       }
 
 
@@ -484,6 +483,12 @@
         document.querySelector("#search-member").style.backgroundColor =
           "grey";
       });
+      document.querySelector("#search-member").style.backgroundColor =
+        "#f7786e";
+      document.querySelector("#stamp-member").style.backgroundColor =
+        "#f7786e";
+      document.querySelector("#add-member").style.backgroundColor =
+        "#f7786e";
       document.querySelector("#stamp-container").style.display = "none";
       function click_button(option) {
         if (option == "add") {
@@ -496,7 +501,6 @@
             "#f7786e";
           document.querySelector("#stamp-member").style.backgroundColor =
             "#f7786e";
-          alert('test')
         } else if (option == "list") {
           document.querySelector(".form-container").style.display = "none";
           document.querySelector("#list-container").style.display = "block";
