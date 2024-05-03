@@ -200,21 +200,22 @@
       </div>
       <table id="members">
         <colgroup>
+          <col style="width: 5%;">
           <col style="width: 5%" />
           <col style="width: 25%" />
           <col style="width: 25%" />
           <col style="width: 30%" />
           <col style="width: 10%" />
-          <col style="width: 10%;">
         </colgroup>
         <thead>
           <tr>
+
+            <th>선택</th>
             <th>순서</th>
             <th>이름</th>
             <th>티어</th>
             <th>라인</th>
             <th>삭제</th>
-            <th>선택</th>
           </tr>
         </thead>
         <tbody>
@@ -248,7 +249,7 @@
             <th>순서</th>
             <th>이름</th>
             <th>도장</th>
-            <th>저장</th>
+            <th><a onclick="insert_all()">전체 저장</a></th>
           </tr>
         </thead>
         <tbody>
@@ -271,6 +272,7 @@
         Iron: 10,
       };
       getData_stamp();
+      let update_data = [];
       function getData_stamp() {
         // 사용자가 입력한 이름을 가져옵니다.
 
@@ -291,6 +293,10 @@
               .getElementById("stamp_members")
               .getElementsByTagName("tbody")[0];
 
+            while (tableBody.firstChild) {
+              tableBody.removeChild(tableBody.firstChild);
+            }
+
             for (const [key, value] of Object.entries(sortedStamps)) {
               console.log(`도장: ${key}, 값: ${value}`);
               row = tableBody.insertRow();
@@ -307,6 +313,13 @@
               cell4 = row.insertCell(3);
               const button = document.createElement("button");
               button.textContent = "저장";
+
+              input.addEventListener('change', update_stamp_value);
+              input.id = key;
+
+              function update_stamp_value() {
+                update_data.push({ name: input.id, value: input.value });
+              }
               button.onclick = function () {
                 console.log(key, input.value)
                 fetch("https://broken-nissa-hyunsoo.koyeb.app/stamp/update", {
@@ -321,7 +334,8 @@
                 })
                   .then((response) => response.json())
                   .then((data) => {
-                    alert(data.message);
+                    alert('업데이트가 완료되었습니다.');
+                    getData_stamp();
                   })
                   .catch((error) => {
                     console.error("Error fetching data:", error);
@@ -330,12 +344,40 @@
 
               cell4.appendChild(button);
             }
-
           })
           .catch((error) => {
             console.error("Error fetching data:", error);
           });
       }
+
+      function insert_all() {
+        document.getElementById('stamp-container').focus();
+        console.log(update_data);  // 디버깅을 위해 업데이트 데이터를 콘솔에 출력
+
+        let promises = [];  // 모든 fetch 요청의 프로미스를 저장할 배열
+
+        let fetchPromise = fetch("https://broken-nissa-hyunsoo.koyeb.app/stamp/update/all", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            update_data: update_data
+          }),
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            alert('업데이트가 완료되었습니다.');
+            getData_stamp();
+          }).catch(error => {
+            console.error("Error fetching data:", error);
+            alert("오류가 발생했습니다: " + error.message);
+          });
+
+        update_data = [];  // 업데이트 데이터를 초기화
+      }
+
 
       function getData() {
         clearTbody();
@@ -372,12 +414,12 @@
 
             membersData.forEach((member) => {
               const row = tableBody.insertRow();
-              const indexCell = row.insertCell(0);
-              const nameCell = row.insertCell(1);
-              const tierCell = row.insertCell(2);
-              const lineCell = row.insertCell(3);
-              const buttonCell = row.insertCell(4);
-              const checkListCell = row.insertCell(5);
+              const checkListCell = row.insertCell(0);
+              const indexCell = row.insertCell(1);
+              const nameCell = row.insertCell(2);
+              const tierCell = row.insertCell(3);
+              const lineCell = row.insertCell(4);
+              const buttonCell = row.insertCell(5);
 
               indexCell.textContent = membersData.indexOf(member) + 1;
               nameCell.textContent = member.name;
