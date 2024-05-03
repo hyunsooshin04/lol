@@ -164,6 +164,18 @@ app.get("/member", (req, res) => {
   });
 });
 
+app.get("/stamp/list", (req, res) => {
+  fs.readFile("data/stamp.json", (err, data) => {
+    if (err) {
+      if (err.code === "ENOENT") {
+        return res.status(404).send("회원 정보가 존재하지 않습니다.");
+      }
+      return res.status(500).send("파일 읽기 중 오류 발생");
+    }
+    res.send(JSON.parse(data));
+  });
+});
+
 app.get("/member/:name", (req, res) => {
   const name = req.params.name;
   fs.readFile("data/member.json", (err, data) => {

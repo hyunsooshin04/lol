@@ -24,11 +24,13 @@
   <div class="container mx-auto px-4">
     <nav class="flex justify-between items-center py-6">
       <div class="text-lg font-bold">
-        <h1><a style="font-size: 30px !important;" href="http://localhost:3000/">요마왕</a></h1>
+        <h1> <a style="font-size: 30px !important" href="index.html">
+            <img src="logo.png" alt="요마왕 로고" width="100px" height="auto">
+          </a></h1>
       </div>
       <div class="space-x-4">
-        <a href="http://localhost:3000/" class="text-gray-600 hover:text-gray-900">대진표</a>
-        <a href="http://localhost:3000/member/list" class="text-gray-600 hover:text-gray-900">멤버 관리</a>
+        <a href="index.html" class="text-gray-600 hover:text-gray-900">대진표</a>
+        <a href="member.html" class="text-gray-600 hover:text-gray-900">멤버 관리</a>
       </div>
     </nav>
   </div>
@@ -41,7 +43,7 @@
   }
 
   .container {
-    max-width: 50%;
+    max-width: 70%;
     margin: 50px auto;
     padding: 20px;
     background-color: #ffffff;
@@ -155,6 +157,10 @@
       onclick="click_button('list')">
       리스트
     </button>
+    <button id="stamp-member" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+      onclick="click_button('stamp')">
+      스탬프
+    </button>
     <div class="form-container">
       <form id="addMemberForm">
         <label for="name" class="form-label">이름 입력</label>
@@ -187,14 +193,19 @@
           style="margin-top: 15px" onclick="getData()">
           검색
         </button>
+        <button id="search" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+          style="margin-top: 15px" onclick="go_index()">
+          대진표로 이동
+        </button>
       </div>
       <table id="members">
         <colgroup>
           <col style="width: 5%" />
           <col style="width: 25%" />
           <col style="width: 25%" />
-          <col style="width: 35%" />
+          <col style="width: 30%" />
           <col style="width: 10%" />
+          <col style="width: 10%;">
         </colgroup>
         <thead>
           <tr>
@@ -203,6 +214,39 @@
             <th>티어</th>
             <th>라인</th>
             <th>삭제</th>
+            <th>선택</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 데이터 로드 자리 -->
+        </tbody>
+      </table>
+    </div>
+    <!-- Stamp -->
+    <div id="stamp-container">
+      <div class="mb-4">
+        <label for="name" class="block mb-2">이름</label>
+        <input type="text" id="search-name" placeholder="이름 입력" class="p-2 border rounded w-full" />
+        <button id="search" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+          style="margin-top: 15px" onclick="getData()">
+          검색
+        </button>
+        <button id="search" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+          style="margin-top: 15px" onclick="go_index()">
+          대진표로 이동
+        </button>
+      </div>
+      <table id="members">
+        <colgroup>
+          <col style="width: 20%">
+          <col style="width: 50%">
+          <col style="width: 30%">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>순서</th>
+            <th>이름</th>
+            <th>Up & Down</th>
           </tr>
         </thead>
         <tbody>
@@ -211,6 +255,7 @@
       </table>
     </div>
     <script>
+      let checkMember = [];
       const tierRanks = {
         Challenger: 1,
         Grandmaster: 2,
@@ -224,13 +269,31 @@
         Iron: 10,
       };
 
+      function getData_stamp() {
+        // 사용자가 입력한 이름을 가져옵니다.
+
+        fetch("https://broken-nissa-hyunsoo.koyeb.app/member/stamp")
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok " + response.statusText);
+            }
+            return response.json();
+          })
+          .then((data) => {
+
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      }
+
       function getData() {
         clearTbody();
         // 사용자가 입력한 이름을 가져옵니다.
         const searchName = document.getElementById("search-name").value;
         console.log(document.getElementById("search-name"));
 
-        fetch("http://localhost:3000/member/")
+        fetch("https://broken-nissa-hyunsoo.koyeb.app/member/")
           .then((response) => {
             if (!response.ok) {
               throw new Error("Network response was not ok " + response.statusText);
@@ -264,11 +327,13 @@
               const tierCell = row.insertCell(2);
               const lineCell = row.insertCell(3);
               const buttonCell = row.insertCell(4);
+              const checkListCell = row.insertCell(5);
 
               indexCell.textContent = membersData.indexOf(member) + 1;
               nameCell.textContent = member.name;
               tierCell.textContent = member.fullTier;
               buttonCell.innerHTML = `<button id="delete" onclick="deleteMember('${member.name}')">삭제</button>`;
+              checkListCell.innerHTML = `<input type="checkbox" onclick="click_member('${member.name}')"/>`;
 
               // 라인 표시 로직은 변경하지 않습니다.
 
@@ -299,6 +364,20 @@
           });
       }
 
+      function click_member(name) {
+        if (checkMember.length >= 10) {
+          alert("10명 이상 선택할 수 없습니다.");
+          return;
+        }
+        if (checkMember.includes(name)) {
+          checkMember = checkMember.filter(
+            (member) => member !== name
+          );
+        } else {
+          checkMember.push(name);
+        }
+        console.log(checkMember);
+      }
 
       function clearTbody() {
         // 'tbody' 요소를 선택
@@ -312,7 +391,7 @@
       function deleteMember(name) {
         if (!confirm(`정말로 삭제하시겠습니까? (${name})`)) return; // 사용자 확인(취소 시 함수 종료
         // URL에 회원 이름을 동적으로 포함
-        fetch(`http://localhost:3000/member/${name}`, {
+        fetch(`https://broken-nissa-hyunsoo.koyeb.app/member/${name}`, {
           method: "DELETE",
         })
           .then((response) => response.json()) // 응답을 JSON으로 파싱
@@ -331,8 +410,6 @@
       }
 
       getData();
-    </script>
-    <script>
       // 버튼 클릭 시
       let mode = "list";
       addEventListener("DOMContentLoaded", function () {
@@ -351,22 +428,36 @@
         if (option == "add") {
           document.querySelector(".form-container").style.display = "block";
           document.querySelector("#list-container").style.display = "none";
+          document.querySelector("#stamp-container").style.display = "none";
           document.querySelector("#add-member").style.backgroundColor =
             "grey";
           document.querySelector("#search-member").style.backgroundColor =
             "#4f46e5";
+          document.querySelector("#stamp-member").style.backgroundColor =
+            "#4f46e5";
         } else if (option == "list") {
           document.querySelector(".form-container").style.display = "none";
           document.querySelector("#list-container").style.display = "block";
+          document.querySelector("#stamp-container").style.display = "none";
           document.querySelector("#search-member").style.backgroundColor =
             "grey";
+          document.querySelector("#add-member").style.backgroundColor =
+            "#4f46e5";
+          document.querySelector("#stamp-member").style.backgroundColor =
+            "#4f46e5";
+        } else if (option == "stamp") {
+          document.querySelector(".form-container").style.display = "none";
+          document.querySelector("#list-container").style.display = "none";
+          document.querySelector("#stamp-container").style.display = "block";
+          document.querySelector("#stamp-member").style.backgroundColor =
+            "grey";
+          document.querySelector("#search-member").style.backgroundColor =
+            "#4f46e5";
           document.querySelector("#add-member").style.backgroundColor =
             "#4f46e5";
         }
 
       }
-    </script>
-    <script>
       document.addEventListener("DOMContentLoaded", function () {
         const lineButtons = document.querySelectorAll(".line-btn");
         const lineInput = document.getElementById("line");
@@ -492,7 +583,7 @@
             })
           );
 
-          fetch("http://localhost:3000/member/add", {
+          fetch("https://broken-nissa-hyunsoo.koyeb.app/member/add", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -507,14 +598,31 @@
             .then((response) => response.json()) // 응답을 JSON 형태로 변환
             .then((data) => {
               alert(data.message); // 서버로부터 받은 메시지를 alert로 표시
-              click_button("list");
-              getData();
+              location.reload(true);
             })
             .catch((error) => {
               alert("오류 발생: " + error.message); // 네트워크 오류 또는 기타 예외 처리
             });
         });
       });
+
+      function go_index() {
+        // checkMember 배열에 있는 멤버들을 쿼리로 만듭니다.
+        var queryString = "";
+        for (var i = 0; i < checkMember.length; i++) {
+          // 첫 번째 멤버는 ? 뒤에 오고, 그 외 멤버들은 & 뒤에 오도록 합니다.
+          if (i === 0) {
+            queryString += "?member=" + encodeURIComponent(checkMember[i]);
+          } else {
+            queryString += "&member=" + encodeURIComponent(checkMember[i]);
+          }
+        }
+
+        // 경고 메시지를 띄우고, 쿼리를 포함한 index.html 페이지로 이동합니다.
+        alert("대진표로 이동합니다.");
+        location.href = "index.html" + queryString;
+      }
+
     </script>
   </div>
 </body>

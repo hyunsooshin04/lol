@@ -1,1 +1,254 @@
-[]
+[
+  {
+    "name": "요마왕",
+    "tier": "Gold",
+    "rank": "4",
+    "line": ["ADC", "Support", "Mid"]
+  },
+  {
+    "name": "교두리",
+    "tier": "Master",
+    "rank": "2",
+    "line": ["Mid", "Top", "Jungle", "ADC", "Support"]
+  },
+  {
+    "name": "초케",
+    "tier": "Emerald",
+    "rank": "3",
+    "line": ["Support", "ADC"]
+  },
+  {
+    "name": "나물",
+    "tier": "Master",
+    "rank": "2",
+    "line": ["Mid", "ADC", "Top"]
+  },
+  {
+    "name": "이설진",
+    "tier": "Master",
+    "rank": 2.5,
+    "line": ["ADC", "Mid"]
+  },
+  {
+    "name": "서린찌",
+    "tier": "Diamond",
+    "rank": "3",
+    "line": ["Top", "Jungle", "ADC", "Mid", "Support"]
+  },
+  {
+    "name": "바나나맛제티",
+    "tier": "Emerald",
+    "rank": "2",
+    "line": ["Top", "Mid"]
+  },
+  {
+    "name": "바위게내꼬야",
+    "tier": "Emerald",
+    "rank": "4",
+    "line": ["Jungle", "Mid"]
+  },
+  {
+    "name": "무능한미대생",
+    "tier": "Emerald",
+    "rank": "2",
+    "line": ["Top", "Mid", "ADC"]
+  },
+  {
+    "name": "파보루",
+    "tier": "Emerald",
+    "rank": "4",
+    "line": ["Support", "ADC"]
+  },
+  {
+    "name": "하자드 트리거",
+    "tier": "Gold",
+    "rank": "3",
+    "line": ["ADC", "Top"]
+  },
+  {
+    "name": "똥꼬링",
+    "tier": "Emerald",
+    "rank": "2",
+    "line": ["Top", "ADC"]
+  },
+  {
+    "name": "악질빌런",
+    "tier": "Diamond",
+    "rank": "1",
+    "line": ["Jungle", "Mid", "ADC", "Top"]
+  },
+  {
+    "name": "문과식",
+    "tier": "Master",
+    "rank": 1.5,
+    "line": ["ADC", "Top"]
+  },
+  {
+    "name": "아마듀",
+    "tier": "Silver",
+    "rank": "1",
+    "line": ["Top", "Mid"]
+  },
+  {
+    "name": "이나긋",
+    "tier": "Emerald",
+    "rank": "1",
+    "line": ["Jungle", "Mid"]
+  },
+  {
+    "name": "찹스초코",
+    "tier": "Master",
+    "rank": 1.5,
+    "line": ["Support", "Mid"]
+  },
+  {
+    "name": "라라라",
+    "tier": "Platinum",
+    "rank": "2",
+    "line": ["Support", "Jungle", "ADC"]
+  },
+  {
+    "name": "모찌욤",
+    "tier": "Silver",
+    "rank": "3",
+    "line": ["Top", "Jungle"]
+  },
+  {
+    "name": "부쉬를 조심해",
+    "tier": "Platinum",
+    "rank": "1",
+    "line": ["Mid", "ADC"]
+  },
+  {
+    "name": "급발진하지말자",
+    "tier": "Master",
+    "rank": "2",
+    "line": ["Mid", "Top", "Jungle", "ADC", "Support"]
+  },
+  {
+    "name": "비원",
+    "tier": "Master",
+    "rank": "4",
+    "line": ["Top", "Jungle"]
+  },
+  {
+    "name": "은평구로맨티스트",
+    "tier": "Platinum",
+    "rank": "2",
+    "line": ["Mid", "Jungle"]
+  },
+  {
+    "name": "혀니일세",
+    "tier": "Gold",
+    "rank": "2",
+    "line": ["Support", "ADC", "Mid"]
+  },
+  {
+    "name": "아로마링크",
+    "tier": "Diamond",
+    "rank": "1",
+    "line": ["Top", "Jungle", "Mid", "ADC", "Support"]
+  },
+  {
+    "name": "클레오라",
+    "tier": "Diamond",
+    "rank": "3",
+    "line": ["Jungle", "Support", "Mid"]
+  },
+  {
+    "name": "모두즐겜",
+    "tier": "Emerald",
+    "rank": "3",
+    "line": ["Top", "Support", "ADC", "Mid"]
+  },
+  {
+    "name": "해모",
+    "tier": "Master",
+    "rank": "3",
+    "line": ["ADC", "Mid"]
+  },
+  {
+    "name": "니코",
+    "tier": "Diamond",
+    "rank": "4",
+    "line": ["ADC", "Jungle", "Mid"]
+  },
+  {
+    "name": "로오드",
+    "tier": "Diamond",
+    "rank": "2",
+    "line": ["Top", "Mid"]
+  },
+  {
+    "name": "밀터",
+    "tier": "Platinum",
+    "rank": "2",
+    "line": ["Jungle", "Top"]
+  },
+  {
+    "name": "방개",
+    "tier": "Emerald",
+    "rank": "1",
+    "line": ["Top", "Support"]
+  },
+  {
+    "name": "세비앙",
+    "tier": "Diamond",
+    "rank": "2",
+    "line": ["Top", "Support"]
+  },
+  {
+    "name": "킹딱지",
+    "tier": "Emerald",
+    "rank": "2",
+    "line": ["ADC", "Mid", "Top"]
+  },
+  {
+    "name": "사각",
+    "tier": "Platinum",
+    "rank": "4",
+    "line": ["Mid", "Top"]
+  },
+  {
+    "name": "갱생루미",
+    "tier": "Emerald",
+    "rank": "4",
+    "line": ["Top", "Mid"]
+  },
+  {
+    "name": "포포",
+    "tier": "Emerald",
+    "rank": "4",
+    "line": ["Top", "Mid", "ADC", "Support"]
+  },
+  {
+    "name": "나자장면",
+    "tier": "Platinum",
+    "rank": "3",
+    "line": ["Top", "Mid", "ADC", "Support", "Jungle"]
+  },
+  {
+    "name": "짜장잘볶는사람",
+    "tier": "Master",
+    "rank": "1",
+    "line": ["Top", "Mid"]
+  },
+  {
+    "name": "참주먹",
+    "tier": "Master",
+    "rank": "2",
+    "line": ["Mid", "ADC"]
+  },
+  {
+    "name": "대파",
+    "tier": "Platinum",
+    "rank": "4",
+    "line": ["ADC", "Mid", "Top", "Jungle"]
+  },
+  {
+    "name": "달좋아해요",
+    "tier": "Master",
+    "rank": "5",
+    "line": ["Support", "Mid"]
+  }
+]

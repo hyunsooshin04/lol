@@ -1,258 +1,254 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add Member Form</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      body {
-        background-color: #f9fafb;
-      }
-      .form-container {
-        max-width: 600px;
-        margin: 70px auto;
-        padding: 20px;
-        background-color: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      .form-title {
-        font-size: 24px;
-        margin-bottom: 20px;
-        text-align: center;
-      }
-      .form-label {
-        margin-bottom: 5px;
-        font-weight: bold;
-      }
-      .form-input {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 20px;
-        border: 1px solid #d1d5db;
-        border-radius: 4px;
-      }
-      .form-select {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 20px;
-        border: 1px solid #d1d5db;
-        border-radius: 4px;
-        background-color: #ffffff;
-      }
-      .submit-btn {
-        width: 100%;
-        padding: 10px;
-        background-color: #4f46e5;
-        color: #ffffff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-      .submit-btn:hover {
-        background-color: #4338ca;
-      }
-      .line-btn {
-        margin-right: 5px;
-        padding: 8px 16px;
-        background-color: #e5e7eb;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-      .line-btn.active {
-        background-color: #4f46e5;
-        color: white;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="form-container">
-      <div class="form-title">멤버 추가(수정)</div>
-      <form id="addMemberForm">
-        <label for="name" class="form-label">이름 입력</label>
-        <input
-          type="text"
-          id="name"
-          class="form-input"
-          placeholder="Ex) 이설진"
-        />
 
-        <label for="tier" class="form-label">티어 입력</label>
-        <input
-          type="text"
-          id="tier"
-          class="form-input"
-          placeholder="Ex) B3, S2, G1, P4, D2, M1, GM1, C1"
-        />
-        0.5층<input type="checkbox" />
-        <label class="form-label"
-          >라인 선택
-          <span style="font-size: 12px; color: #666"
-            >(선택한 순서로 선호 라인의 순서가 정해집니다.)</span
-          ></label
-        >
-        <div id="lineButtons">
-          <button type="button" class="line-btn">Top</button>
-          <button type="button" class="line-btn">Jungle</button>
-          <button type="button" class="line-btn">Mid</button>
-          <button type="button" class="line-btn">ADC</button>
-          <button type="button" class="line-btn">Support</button>
-        </div>
-        <input type="hidden" id="line" name="line" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Member Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #f9fafb;
+    }
 
-        <button type="submit" class="submit-btn">멤버 추가</button>
-      </form>
-    </div>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const lineButtons = document.querySelectorAll(".line-btn");
-        const lineInput = document.getElementById("line");
-        let selectedLines = [];
+    .form-container {
+      max-width: 600px;
+      margin: 70px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-        lineButtons.forEach((button) => {
-          button.addEventListener("click", function () {
-            const lineValue = button.textContent;
-            if (selectedLines.includes(lineValue)) {
-              // If already selected, remove it
-              selectedLines = selectedLines.filter(
-                (line) => line !== lineValue
-              );
-            } else {
-              // Add to selections
-              selectedLines.push(lineValue);
-            }
-            updateLineInput();
-            updateButtonStyles();
-          });
-        });
+    .form-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
 
-        function updateLineInput() {
-          lineInput.value = selectedLines.join(" ");
-        }
+    .form-label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
 
-        function updateButtonStyles() {
-          lineButtons.forEach((button) => {
-            const lineValue = button.textContent;
-            if (selectedLines.includes(lineValue)) {
-              button.classList.add("active");
-            } else {
-              button.classList.remove("active");
-            }
-          });
-        }
+    .form-input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 20px;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+    }
 
-        document
-          .getElementById("addMemberForm")
-          .addEventListener("submit", function (event) {
-            event.preventDefault();
-            // Here you would normally handle the form submission to the server
-            console.log("Submitted with lines:", lineInput.value);
-          });
-      });
+    .form-select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 20px;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      background-color: #ffffff;
+    }
 
-      document.addEventListener("DOMContentLoaded", function () {
-        const lineButtons = document.querySelectorAll(".line-btn");
-        const lineInput = document.getElementById("line");
-        let selectedLines = [];
+    .submit-btn {
+      width: 100%;
+      padding: 10px;
+      background-color: #4f46e5;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
 
-        lineButtons.forEach((button) => {
-          button.addEventListener("click", function () {
-            const lineValue = button.textContent;
-            if (selectedLines.includes(lineValue)) {
-              // 이미 선택된 항목을 선택 취소
-              selectedLines = selectedLines.filter(
-                (line) => line !== lineValue
-              );
-            } else {
-              // 선택되지 않은 항목을 추가
-              selectedLines.push(lineValue);
-            }
-            updateLineInput();
-            updateButtonStyles();
-          });
-        });
+    .submit-btn:hover {
+      background-color: #4338ca;
+    }
 
-        function updateLineInput() {
-          lineInput.value = selectedLines.join(" ");
-        }
+    .line-btn {
+      margin-right: 5px;
+      padding: 8px 16px;
+      background-color: #e5e7eb;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
 
-        function updateButtonStyles() {
-          lineButtons.forEach((button) => {
-            const lineValue = button.textContent;
-            if (selectedLines.includes(lineValue)) {
-              button.classList.add("active");
-            } else {
-              button.classList.remove("active");
-            }
-          });
-        }
+    .line-btn.active {
+      background-color: #4f46e5;
+      color: white;
+    }
+  </style>
+</head>
 
-        const form = document.getElementById("addMemberForm");
-        const tierMapping = {
-          I: "Iron",
-          B: "Bronze",
-          S: "Silver",
-          G: "Gold",
-          P: "Platinum",
-          E: "Emerald",
-          D: "Diamond",
-          M: "Master",
-          GM: "Grandmaster",
-          C: "Challenger",
-        };
+<body>
+  <div class="form-container">
+    <div class="form-title">멤버 추가(수정)</div>
+    <form id="addMemberForm">
+      <label for="name" class="form-label">이름 입력</label>
+      <input type="text" id="name" class="form-input" placeholder="Ex) 이설진" />
 
-        form.addEventListener("submit", function (event) {
-          event.preventDefault();
-          const name = document.getElementById("name").value;
-          const tier = document.getElementById("tier").value;
-          const lines = lineInput.value;
+      <label for="tier" class="form-label">티어 입력</label>
+      <input type="text" id="tier" class="form-input" placeholder="Ex) B3, S2, G1, P4, D2, M1, GM1, C1" />
+      0.5층<input type="checkbox" />
+      <label class="form-label">라인 선택
+        <span style="font-size: 12px; color: #666">(선택한 순서로 선호 라인의 순서가 정해집니다.)</span></label>
+      <div id="lineButtons">
+        <button type="button" class="line-btn">Top</button>
+        <button type="button" class="line-btn">Jungle</button>
+        <button type="button" class="line-btn">Mid</button>
+        <button type="button" class="line-btn">ADC</button>
+        <button type="button" class="line-btn">Support</button>
+      </div>
+      <input type="hidden" id="line" name="line" />
 
-          const tierMatch = tier.match(/^([A-Z]+)(\d+)$/);
-          if (!tierMatch || !tierMapping[tierMatch[1]]) {
-            alert("티어 형식이 올바르지 않습니다. 예: B3");
-            return;
+      <button type="submit" class="submit-btn">멤버 추가</button>
+    </form>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const lineButtons = document.querySelectorAll(".line-btn");
+      const lineInput = document.getElementById("line");
+      let selectedLines = [];
+
+      lineButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const lineValue = button.textContent;
+          if (selectedLines.includes(lineValue)) {
+            // If already selected, remove it
+            selectedLines = selectedLines.filter(
+              (line) => line !== lineValue
+            );
+          } else {
+            // Add to selections
+            selectedLines.push(lineValue);
           }
-
-          const tierRank = tierMapping[tierMatch[1]];
-          const rank = tierMatch[2];
-
-          console.log(
-            JSON.stringify({
-              name: name,
-              tier: tierRank,
-              rank: rank,
-              line: lines.split(" "), // 문자열을 배열로 변환
-            })
-          );
-
-          fetch("http://localhost:3000/member/add", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: name,
-              tier: tierRank,
-              rank: rank,
-              line: lines.split(" "), // 문자열을 배열로 변환
-            }),
-          })
-            .then((response) => response.json()) // 응답을 JSON 형태로 변환
-            .then((data) => {
-              alert(data.message); // 서버로부터 받은 메시지를 alert로 표시
-            })
-            .catch((error) => {
-              alert("오류 발생: " + error.message); // 네트워크 오류 또는 기타 예외 처리
-            });
+          updateLineInput();
+          updateButtonStyles();
         });
       });
-    </script>
-  </body>
+
+      function updateLineInput() {
+        lineInput.value = selectedLines.join(" ");
+      }
+
+      function updateButtonStyles() {
+        lineButtons.forEach((button) => {
+          const lineValue = button.textContent;
+          if (selectedLines.includes(lineValue)) {
+            button.classList.add("active");
+          } else {
+            button.classList.remove("active");
+          }
+        });
+      }
+
+      document
+        .getElementById("addMemberForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          // Here you would normally handle the form submission to the server
+          console.log("Submitted with lines:", lineInput.value);
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const lineButtons = document.querySelectorAll(".line-btn");
+      const lineInput = document.getElementById("line");
+      let selectedLines = [];
+
+      lineButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const lineValue = button.textContent;
+          if (selectedLines.includes(lineValue)) {
+            // 이미 선택된 항목을 선택 취소
+            selectedLines = selectedLines.filter(
+              (line) => line !== lineValue
+            );
+          } else {
+            // 선택되지 않은 항목을 추가
+            selectedLines.push(lineValue);
+          }
+          updateLineInput();
+          updateButtonStyles();
+        });
+      });
+
+      function updateLineInput() {
+        lineInput.value = selectedLines.join(" ");
+      }
+
+      function updateButtonStyles() {
+        lineButtons.forEach((button) => {
+          const lineValue = button.textContent;
+          if (selectedLines.includes(lineValue)) {
+            button.classList.add("active");
+          } else {
+            button.classList.remove("active");
+          }
+        });
+      }
+
+      const form = document.getElementById("addMemberForm");
+      const tierMapping = {
+        I: "Iron",
+        B: "Bronze",
+        S: "Silver",
+        G: "Gold",
+        P: "Platinum",
+        E: "Emerald",
+        D: "Diamond",
+        M: "Master",
+        GM: "Grandmaster",
+        C: "Challenger",
+      };
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const name = document.getElementById("name").value;
+        const tier = document.getElementById("tier").value;
+        const lines = lineInput.value;
+
+        const tierMatch = tier.match(/^([A-Z]+)(\d+)$/);
+        if (!tierMatch || !tierMapping[tierMatch[1]]) {
+          alert("티어 형식이 올바르지 않습니다. 예: B3");
+          return;
+        }
+
+        const tierRank = tierMapping[tierMatch[1]];
+        const rank = tierMatch[2];
+
+        console.log(
+          JSON.stringify({
+            name: name,
+            tier: tierRank,
+            rank: rank,
+            line: lines.split(" "), // 문자열을 배열로 변환
+          })
+        );
+
+        fetch("http://localhost:3000/member/add", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: name,
+            tier: tierRank,
+            rank: rank,
+            line: lines.split(" "), // 문자열을 배열로 변환
+          }),
+        })
+          .then((response) => response.json()) // 응답을 JSON 형태로 변환
+          .then((data) => {
+            alert(data.message); // 서버로부터 받은 메시지를 alert로 표시
+            location.reload(true);
+          })
+          .catch((error) => {
+            alert("오류 발생: " + error.message); // 네트워크 오류 또는 기타 예외 처리
+          });
+      });
+    });
+  </script>
+</body>
+
 </html>

@@ -7,14 +7,14 @@
   <title>Form and Table Display</title>
   <style>
     @font-face {
-      font-family: 'Cafe24Ssurround';
-      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff') format('woff');
+      font-family: "Cafe24Ssurround";
+      src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff") format("woff");
       font-weight: normal;
       font-style: normal;
     }
 
     body {
-      font-family: 'Cafe24Ssurround', sans-serif !important;
+      font-family: "Cafe24Ssurround", sans-serif !important;
     }
   </style>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -24,11 +24,15 @@
   <div class="container mx-auto px-4">
     <nav class="flex justify-between items-center py-6">
       <div class="text-lg font-bold">
-        <h1><a style="font-size: 30px !important;" href="http://localhost:3000/">요마왕</a></h1>
+        <h1>
+          <a style="font-size: 30px !important" href="index.html">
+            <img src="logo.png" alt="요마왕 로고" width="100px" height="auto">
+          </a>
+        </h1>
       </div>
       <div class="space-x-4">
-        <a href="http://localhost:3000/" class="text-gray-600 hover:text-gray-900">대진표</a>
-        <a href="http://localhost:3000/member/list" class="text-gray-600 hover:text-gray-900">멤버 관리</a>
+        <a href="index.html" class="text-gray-600 hover:text-gray-900">대진표</a>
+        <a href="member.html" class="text-gray-600 hover:text-gray-900">멤버 관리</a>
       </div>
     </nav>
   </div>
@@ -70,7 +74,7 @@
   }
 
   .container {
-    max-width: 50%;
+    max-width: 70%;
     margin: 50px auto;
     padding: 20px;
     background-color: #ffffff;
@@ -130,14 +134,16 @@
     <div class="mt-6">
       <table id="namesTable">
         <colgroup>
+          <col style="width: 10%;">
           <col style="width: 20%" />
           <col style="width: 20%" />
-          <col style="width: 30%" />
+          <col style="width: 20%" />
           <col style="width: 10%" />
           <col style="width: 15%" />
         </colgroup>
         <thead>
           <tr>
+            <th>번호</th>
             <th>이름</th>
             <th>티어</th>
             <th>라인</th>
@@ -211,7 +217,7 @@
           alert("이름을 입력해주세요.");
           return;
         }
-        fetch(`http://localhost:3000/member/${nameInput.value}`)
+        fetch(`https://broken-nissa-hyunsoo.koyeb.app/member/${nameInput.value}`)
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
@@ -220,24 +226,47 @@
               .getElementsByTagName("tbody")[0];
             const newRow = tableBody.insertRow(tableBody.rows.length);
 
+            // index 추가
+            const indexCell = newRow.insertCell(0);
+            indexCell.textContent = tableBody.rows.length;
+
             // 이름 셀 추가
-            const nameCell = newRow.insertCell(0);
+            const nameCell = newRow.insertCell(1);
             nameCell.textContent = data.name;
 
             // 티어 셀 추가
-            const tierCell = newRow.insertCell(1);
+            const tierCell = newRow.insertCell(2);
             tierCell.textContent = data.tier + " " + data.rank;
 
             // 라인 셀 추가
-            const lineCell = newRow.insertCell(2);
-            lineCell.textContent = data.line.join(", "); // 가정: line 데이터가 배열 형태로 전달된다면
+            const lineCell = newRow.insertCell(3);
+            lineCell.textContent = data.line
+              .map((item) => {
+                // 대소문자를 구분하지 않기 위해 모든 텍스트를 소문자로 변환
+                const lowerCaseItem = item.toLowerCase();
+
+                // 각 롤에 따라 한글로 변환
+                if (lowerCaseItem === "adc") {
+                  return "원딜";
+                } else if (lowerCaseItem === "mid") {
+                  return "미드";
+                } else if (lowerCaseItem === "top") {
+                  return "탑";
+                } else if (lowerCaseItem === "jungle") {
+                  return "정글";
+                } else if (lowerCaseItem === "support") {
+                  return "서폿";
+                }
+                return item; // 변환할 필요가 없는 경우 원래 값 반환
+              })
+              .join(", "); // 배열의 모든 요소를 문자열로 결합
 
             // 점수 셀 추가 (여기서는 임시로 고정된 값을 사용)
-            const scoreCell = newRow.insertCell(3);
+            const scoreCell = newRow.insertCell(4);
             scoreCell.textContent = calculateScore(data);
 
             // 삭제 버튼 셀 추가
-            const deleteCell = newRow.insertCell(4);
+            const deleteCell = newRow.insertCell(5);
             const deleteButton = document.createElement("button");
             deleteButton.textContent = "삭제";
             deleteButton.classList.add(
@@ -265,15 +294,42 @@
           });
       });
 
-    testData = [
-    ];
+    testData = [];
+
+    // URL에서 쿼리 스트링을 가져오기
+    var queryString = window.location.search;
+
+    // 쿼리 스트링이 있는지 확인
+    if (queryString) {
+      // 쿼리 스트링의 '?' 문자 제거
+      queryString = queryString.substring(1);
+
+      // '&' 문자를 기준으로 쿼리 스트링을 분리하여 배열로 만듦
+      var queryParams = queryString.split('&');
+
+      // 데이터를 담을 배열
+      var testData = [];
+
+      // 각각의 쿼리 파라미터에 대해 반복
+      for (var i = 0; i < queryParams.length; i++) {
+        // '=' 문자를 기준으로 파라미터 이름과 값으로 분리
+        var param = queryParams[i].split('=');
+        // URL 디코딩 후 testData 배열에 추가
+        testData.push(decodeURIComponent(param[1]));
+      }
+
+      // testData 배열 출력 (개발자 도구의 콘솔에 출력)
+      console.log(testData);
+    }
 
     testData.forEach((name) => {
+      // test(name);
+      console.log(name);
       test(name);
     });
 
     function test(name) {
-      fetch(`http://localhost:3000/member/${name}`)
+      fetch(`https://broken-nissa-hyunsoo.koyeb.app/member/${name}`)
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
@@ -282,16 +338,20 @@
             .getElementsByTagName("tbody")[0];
           const newRow = tableBody.insertRow(tableBody.rows.length);
 
+          // index 추가
+          const indexCell = newRow.insertCell(0);
+          indexCell.textContent = tableBody.rows.length;
+
           // 이름 셀 추가
-          const nameCell = newRow.insertCell(0);
+          const nameCell = newRow.insertCell(1);
           nameCell.textContent = data.name;
 
           // 티어 셀 추가
-          const tierCell = newRow.insertCell(1);
+          const tierCell = newRow.insertCell(2);
           tierCell.textContent = data.tier + " " + data.rank;
 
           // 라인 셀 추가
-          const lineCell = newRow.insertCell(2);
+          const lineCell = newRow.insertCell(3);
           lineCell.textContent = data.line
             .map((item) => {
               // 대소문자를 구분하지 않기 위해 모든 텍스트를 소문자로 변환
@@ -314,11 +374,11 @@
             .join(", "); // 배열의 모든 요소를 문자열로 결합
 
           // 점수 셀 추가 (여기서는 임시로 고정된 값을 사용)
-          const scoreCell = newRow.insertCell(3);
+          const scoreCell = newRow.insertCell(4);
           scoreCell.textContent = calculateScore(data);
 
           // 삭제 버튼 셀 추가
-          const deleteCell = newRow.insertCell(4);
+          const deleteCell = newRow.insertCell(5);
           const deleteButton = document.createElement("button");
           deleteButton.textContent = "삭제";
           deleteButton.classList.add(
@@ -397,7 +457,7 @@
 
       // 특정 유저를 각 팀에 우선 할당
       sortedParticipants.forEach((participant) => {
-        const name = participant.cells[0].textContent.trim();
+        const name = participant.cells[1].textContent.trim();
         const participantScore = parseInt(participant.cells[3].textContent);
 
         if (name === aTeamUser && aTeamUser != null) {
@@ -413,8 +473,8 @@
 
       // 나머지 참가자를 점수 차이를 최소화하면서 팀에 할당
       sortedParticipants.forEach((participant) => {
-        const name = participant.cells[0].textContent.trim();
-        const participantScore = parseInt(participant.cells[3].textContent);
+        const name = participant.cells[1].textContent.trim();
+        const participantScore = parseInt(participant.cells[4].textContent);
 
         // 이미 할당된 유저는 제외하고 나머지 참가자를 할당
         if (!(name === aTeamUser && name === bTeamUser)) {
@@ -457,7 +517,7 @@
         .getElementsByTagName("tbody")[0];
       const newRow = table.insertRow();
       Array.from(participant.cells).forEach((cell) => {
-        if (cell.cellIndex === 4) return; // 삭제 버튼은 제외 (4번째 열)
+        if (cell.cellIndex === 5 || cell.cellIndex === 0) return; // 삭제 버튼은 제외 (4번째 열)
         const newCell = newRow.insertCell();
         newCell.textContent = cell.textContent;
       });
