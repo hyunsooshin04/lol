@@ -176,7 +176,7 @@ app.get("/stamp/list", (req, res) => {
   });
 });
 
-app.get("/member/:name", (req, res) => {
+app.app.get("/member/:name", (req, res) => {
   const name = req.params.name;
   fs.readFile("data/member.json", (err, data) => {
     if (err) {
