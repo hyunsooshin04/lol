@@ -43,7 +43,7 @@
   }
 
   .container {
-    max-width: 70%;
+    max-width: 50%;
     margin: 50px auto;
     padding: 20px;
     background-color: #ffffff;
@@ -104,7 +104,7 @@
   .submit-btn {
     width: 100%;
     padding: 10px;
-    background-color: #4f46e5;
+    background-color: #f7786e;
     color: #ffffff;
     border: none;
     border-radius: 4px;
@@ -126,7 +126,7 @@
   }
 
   .line-btn.active {
-    background-color: #4f46e5;
+    background-color: #f7786e;
     color: white;
   }
 
@@ -136,7 +136,7 @@
 
   #delete {
     width: 100%;
-    background-color: #f44336;
+    background-color: #f7786e;
     color: white;
     border: none;
     border-radius: 4px;
@@ -239,14 +239,16 @@
       <table id="stamp_members">
         <colgroup>
           <col style="width: 20%">
-          <col style="width: 50%">
+          <col style="width: 40%">
           <col style="width: 30%">
+          <col style="width: 10%">
         </colgroup>
         <thead>
           <tr>
             <th>순서</th>
             <th>이름</th>
-            <th>Up & Down</th>
+            <th>도장</th>
+            <th>저장</th>
           </tr>
         </thead>
         <tbody>
@@ -280,46 +282,55 @@
             return response.json();
           })
           .then((data) => {
-            const positiveStamps = data["Positive Stamps"];
-            const sortedPositiveStamps = Object.fromEntries(
-              Object.entries(positiveStamps).sort((a, b) => a[1] - b[1])
-            );
-            console.log(sortedPositiveStamps);
 
-            const negativeStamps = data["Negative Stamps"];
-            const sortedNegativeStamps = Object.fromEntries(
-              Object.entries(negativeStamps).sort((a, b) => a[1] - b[1])
+            const sortedStamps = Object.fromEntries(
+              Object.entries(data).sort((a, b) => b[1] - a[1])
             );
-            console.log(sortedNegativeStamps);
 
             const tableBody = document
               .getElementById("stamp_members")
               .getElementsByTagName("tbody")[0];
 
+            for (const [key, value] of Object.entries(sortedStamps)) {
+              console.log(`도장: ${key}, 값: ${value}`);
+              row = tableBody.insertRow();
+              cell1 = row.insertCell(0);
+              cell2 = row.insertCell(1);
+              cell3 = row.insertCell(2);
+              cell1.textContent = Object.keys(sortedStamps).indexOf(key) + 1;
+              cell2.textContent = key;
+              const input = document.createElement("input");
+              input.type = "number";
+              input.value = value;
+              cell3.appendChild(input);
 
-            negativeStamps.forEach((member) => {
-              const row = tableBody.insertRow();
-              const indexCell = row.insertCell(0);
-              const nameCell = row.insertCell(1);
-              const buttonCell = row.insertCell(2);
+              cell4 = row.insertCell(3);
+              const button = document.createElement("button");
+              button.textContent = "저장";
+              button.onclick = function () {
+                console.log(key, input.value)
+                fetch("https://broken-nissa-hyunsoo.koyeb.app/stamp/update", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    name: key,
+                    value: input.value,
+                  }),
+                })
+                  .then((response) => response.json())
+                  .then((data) => {
+                    alert(data.message);
+                  })
+                  .catch((error) => {
+                    console.error("Error fetching data:", error);
+                  });
+              };
 
-              indexCell.textContent = negativeStamps.indexOf(member) + 1;
-              nameCell.textContent = member.name;
-              buttonCell.innerHTML = `<button id="delete" onclick="deleteMember('${member.name}')">더하기</button>
-                <button id="delete" onclick="deleteMember('${member.name}')">빼기</button>`;
-            });
+              cell4.appendChild(button);
+            }
 
-            positiveStamps.forEach((member) => {
-              const row = tableBody.insertRow();
-              const indexCell = row.insertCell(0);
-              const nameCell = row.insertCell(1);
-              const buttonCell = row.insertCell(2);
-
-              indexCell.textContent = positiveStamps.indexOf(member) + 1;
-              nameCell.textContent = member.name;
-              buttonCell.innerHTML = `<button id="delete" onclick="deleteMember('${member.name}')">더하기</button>
-                <button id="delete" onclick="deleteMember('${member.name}')">빼기</button>`;
-            });
           })
           .catch((error) => {
             console.error("Error fetching data:", error);
@@ -448,6 +459,16 @@
           });
       }
 
+      function updateStampScore(name, score) {
+        if (typeof score !== "number" || !Number.isInteger(score)) {
+          console.error("Invalid score:", score);
+          return;
+        }
+
+        alert(name, score);
+      }
+
+
       getData();
       // 버튼 클릭 시
       let mode = "list";
@@ -463,6 +484,7 @@
         document.querySelector("#search-member").style.backgroundColor =
           "grey";
       });
+      document.querySelector("#stamp-container").style.display = "none";
       function click_button(option) {
         if (option == "add") {
           document.querySelector(".form-container").style.display = "block";
@@ -471,9 +493,10 @@
           document.querySelector("#add-member").style.backgroundColor =
             "grey";
           document.querySelector("#search-member").style.backgroundColor =
-            "#4f46e5";
+            "#f7786e";
           document.querySelector("#stamp-member").style.backgroundColor =
-            "#4f46e5";
+            "#f7786e";
+          alert('test')
         } else if (option == "list") {
           document.querySelector(".form-container").style.display = "none";
           document.querySelector("#list-container").style.display = "block";
@@ -481,9 +504,9 @@
           document.querySelector("#search-member").style.backgroundColor =
             "grey";
           document.querySelector("#add-member").style.backgroundColor =
-            "#4f46e5";
+            "#f7786e";
           document.querySelector("#stamp-member").style.backgroundColor =
-            "#4f46e5";
+            "#f7786e";
         } else if (option == "stamp") {
           document.querySelector(".form-container").style.display = "none";
           document.querySelector("#list-container").style.display = "none";
@@ -491,9 +514,9 @@
           document.querySelector("#stamp-member").style.backgroundColor =
             "grey";
           document.querySelector("#search-member").style.backgroundColor =
-            "#4f46e5";
+            "#f7786e";
           document.querySelector("#add-member").style.backgroundColor =
-            "#4f46e5";
+            "#f7786e";
         }
 
       }

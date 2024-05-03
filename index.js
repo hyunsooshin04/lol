@@ -176,6 +176,28 @@ app.get("/stamp/list", (req, res) => {
   });
 });
 
+app.post("/stamp/update", (req, res) => {
+  const { name, value } = req.body;
+  const filePath = "./data/stamp.json"; // JSON 파일 경로
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).send({ message: "Error reading file" });
+    }
+
+    const jsonData = JSON.parse(data);
+    jsonData[name] = parseInt(value); // 이름에 해당하는 값을 업데이트
+
+    fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), "utf8", (err) => {
+      if (err) {
+        return res.status(500).send({ message: "Error writing file" });
+      }
+
+      res.send({ message: "Data updated successfully" });
+    });
+  });
+});
+
 app.get("/member/:name", (req, res) => {
   const name = req.params.name;
   fs.readFile("data/member.json", (err, data) => {
